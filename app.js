@@ -2,16 +2,15 @@ require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
+const { errors } = require('celebrate');
 
 const { PORT = 3000 } = process.env;
 const app = express();
-// const { errorHandler } = require('./middlewares/errorHandler');
-const router = require('./routes');
+const { errorHandler } = require('./middlewares/errorHandler');
+const router = require('./routes/index');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { allowedCors } = require('./middlewares/cors');
 
-app.use(express.json());
-app.use(cookieParser());
-app.use(router);
-// app.use(errorHandler);
 async function main() {
   try {
     await mongoose.connect('mongodb://localhost:27017/moviesdb', {
@@ -28,3 +27,12 @@ async function main() {
 }
 
 main();
+
+app.use(allowedCors);
+app.use(express.json());
+app.use(cookieParser());
+app.use(requestLogger);
+app.use(router);
+app.use(errors());
+app.use(errorLogger);
+app.use(errorHandler);
