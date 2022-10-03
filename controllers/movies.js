@@ -15,15 +15,16 @@ module.exports.getMovies = async (req, res, next) => {
 
 module.exports.createMovies = async (req, res, next) => {
   const {
-    name, link, likes, createdAt,
+    country, director, duration, year, description, image, nameRU, nameEN, trailerLink, thumbnail
   } = req.body;
   try {
     const movie = await Movie.create({
-      name, link, owner: req.user._id, likes, createdAt,
+      country, director, duration, year, description, owner: req.user._id, image, nameRU, nameEN, trailerLink, thumbnail
     });
     res.send(movie);
   } catch (err) {
     if (err.name === 'ValidationError') {
+      res.send(err);
       next(new BadreqestError('Переданы некорректные данные'));
     } else {
       next(new ServerError('Произошла ошибка на сервере'));

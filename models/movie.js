@@ -11,7 +11,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
   },
   duration: {
-    type: Number,
+    type: String,
     required: true,
   },
   year: {
@@ -21,6 +21,14 @@ const movieSchema = new mongoose.Schema({
   description: {
     type: String,
     required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+    validate: {
+      validator: validator.isURL,
+      message: 'Неправильный формат ссылки',
+    },
   },
   trailerLink: {
     type: String,
