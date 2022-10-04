@@ -9,15 +9,6 @@ const ConflictError = require('../utils/ConflictError');
 
 const JWT_SECRET = 'secret';
 
-module.exports.getUsers = async (req, res, next) => {
-  try {
-    const users = await User.find({});
-    res.send(users);
-  } catch (err) {
-    next(new ServerError('Произошла ошибка на сервере'));
-  }
-};
-
 module.exports.getUser = async (req, res, next) => {
   const { userId } = req.params;
   try {
