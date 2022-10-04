@@ -15,11 +15,11 @@ module.exports.getMovies = async (req, res, next) => {
 
 module.exports.createMovies = async (req, res, next) => {
   const {
-    country, director, duration, year, description, image, nameRU, nameEN, trailerLink, thumbnail
+    country, director, duration, year, description, image, trailerLink, thumbnail, movieId, nameRU, nameEN,
   } = req.body;
   try {
     const movie = await Movie.create({
-      country, director, duration, year, description, owner: req.user._id, image, nameRU, nameEN, trailerLink, thumbnail
+      country, director, duration, year, description, image, trailerLink, thumbnail, owner: req.user._id, movieId, nameRU, nameEN
     });
     res.send(movie);
   } catch (err) {
@@ -34,16 +34,16 @@ module.exports.createMovies = async (req, res, next) => {
 
 module.exports.deleteMovies = async (req, res, next) => {
   const { movieId } = req.params;
+  console.log(res.body);
   try {
     const movie = await Movie.findById(movieId);
-    if (!movie) {
-      next(new NotfoundError('Такой карточки не существует'));
-    } else if (movie.owner.toString() !== req.user._id) {
-      next(new ForbiddenError('У вас нет прав на удаление этой карточки'));
-    } else {
-      await Movie.remove(movie);
-      res.send(movie);
-    }
+    res.send(movie);
+    // if (!movie) {
+    //   next(new NotfoundError('Такой карточки не существует'));
+    // } else {
+    //   await Movie.remove(movie);
+    //   res.send(movie);
+    // }
   } catch (err) {
     if (err.name === 'CastError') {
       next(new BadreqestError('Переданы некорректные данные'));
@@ -52,10 +52,6 @@ module.exports.deleteMovies = async (req, res, next) => {
     }
   }
 };
-
-
-
-
 
 // this code need to put movies on favourites
 
