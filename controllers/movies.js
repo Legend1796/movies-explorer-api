@@ -1,6 +1,6 @@
 const Movie = require('../models/movie');
 const BadreqestError = require('../utils/BadreqestError');
-const ForbiddenError = require('../utils/ForbiddenError');
+// const ForbiddenError = require('../utils/ForbiddenError');
 const ServerError = require('../utils/ServerError');
 const NotfoundError = require('../utils/NotfoundError');
 
@@ -15,11 +15,32 @@ module.exports.getMovies = async (req, res, next) => {
 
 module.exports.createMovies = async (req, res, next) => {
   const {
-    country, director, duration, year, description, image, trailerLink, thumbnail, movieId, nameRU, nameEN,
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    movieId,
+    nameRU,
+    nameEN,
   } = req.body;
   try {
     const movie = await Movie.create({
-      country, director, duration, year, description, image, trailerLink, thumbnail, owner: req.user._id, movieId, nameRU, nameEN
+      country,
+      director,
+      duration,
+      year,
+      description,
+      image,
+      trailerLink,
+      thumbnail,
+      owner: req.user._id,
+      movieId,
+      nameRU,
+      nameEN,
     });
     res.send(movie);
   } catch (err) {

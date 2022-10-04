@@ -1,7 +1,7 @@
 const moviesRouters = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const {
-  getMovies, createMovies, deleteMovies
+  getMovies, createMovies, deleteMovies,
 } = require('../controllers/movies');
 
 moviesRouters.get('/movies', getMovies);
