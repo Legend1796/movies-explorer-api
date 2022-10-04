@@ -1,6 +1,6 @@
 const Movie = require('../models/movie');
 const BadreqestError = require('../utils/BadreqestError');
-// const ForbiddenError = require('../utils/ForbiddenError');
+const ForbiddenError = require('../utils/ForbiddenError');
 const ServerError = require('../utils/ServerError');
 const NotfoundError = require('../utils/NotfoundError');
 
@@ -59,8 +59,10 @@ module.exports.deleteMovies = async (req, res, next) => {
     const movie = await Movie.findById(movieId);
     if (!movie) {
       next(new NotfoundError('Такой карточки не существует'));
+    } else if (movie.owner.toString() !== req.user._id) {
+      next(new ForbiddenError('У вас нет прав на удаление этой карточки'));
     } else {
-      await Movie.remove(movie);
+      await Movie.deleteOne(movie);
       res.send(movie);
     }
   } catch (err) {
