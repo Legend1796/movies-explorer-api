@@ -34,16 +34,14 @@ module.exports.createMovies = async (req, res, next) => {
 
 module.exports.deleteMovies = async (req, res, next) => {
   const { movieId } = req.params;
-  console.log(res.body);
   try {
     const movie = await Movie.findById(movieId);
-    res.send(movie);
-    // if (!movie) {
-    //   next(new NotfoundError('Такой карточки не существует'));
-    // } else {
-    //   await Movie.remove(movie);
-    //   res.send(movie);
-    // }
+    if (!movie) {
+      next(new NotfoundError('Такой карточки не существует'));
+    } else {
+      await Movie.remove(movie);
+      res.send(movie);
+    }
   } catch (err) {
     if (err.name === 'CastError') {
       next(new BadreqestError('Переданы некорректные данные'));
@@ -52,51 +50,3 @@ module.exports.deleteMovies = async (req, res, next) => {
     }
   }
 };
-
-// this code need to put movies on favourites
-
-
-
-// module.exports.putLikeMovie = async (req, res, next) => {
-//   const { movieId } = req.params;
-//   try {
-//     const movie = await Movie.findByIdAndUpdate(
-//       movieId,
-//       { $addToSet: { likes: req.user._id } },
-//       { new: true, runValidators: true },
-//     );
-//     if (!movie) {
-//       next(new NotfoundError('Такой карточки не существует'));
-//     } else {
-//       res.send(movie);
-//     }
-//   } catch (err) {
-//     if (err.name === 'CastError') {
-//       next(new BadreqestError('Переданы некорректные данные'));
-//     } else {
-//       next(new ServerError('Произошла ошибка на сервере'));
-//     }
-//   }
-// };
-
-// module.exports.deleteLikeMovie = async (req, res, next) => {
-//   const { movieId } = req.params;
-//   try {
-//     const movie = await Movie.findByIdAndUpdate(
-//       movieId,
-//       { $pull: { likes: req.user._id } },
-//       { new: true, runValidators: true },
-//     );
-//     if (!movie) {
-//       next(new NotfoundError('Такой карточки не существует'));
-//     } else {
-//       res.send(movie);
-//     }
-//   } catch (err) {
-//     if (err.name === 'CastError') {
-//       next(new BadreqestError('Переданы некорректные данные'));
-//     } else {
-//       next(new ServerError('Произошла ошибка на сервере'));
-//     }
-//   }
-// };
