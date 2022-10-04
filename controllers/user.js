@@ -7,7 +7,7 @@ const ServerError = require('../utils/ServerError');
 const NotfoundError = require('../utils/NotfoundError');
 const ConflictError = require('../utils/ConflictError');
 
-const JWT_SECRET = 'secret';
+const { JWT_SECRET = 'secret' } = process.env;
 
 module.exports.getUser = async (req, res, next) => {
   const { userId } = req.params;
