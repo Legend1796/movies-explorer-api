@@ -24,7 +24,7 @@ router.use(auth);
 router.use(userRouters);
 router.use(moviesRouters);
 router.use((req, res, next) => {
-  next(new NotfoundError('Произошла ошибка'));
+  next(new NotfoundError('Данный ресурс не найден в базе данных'));
 });
 router.use(errors());
 

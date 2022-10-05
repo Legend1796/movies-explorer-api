@@ -7,7 +7,7 @@ const ServerError = require('../utils/ServerError');
 const NotfoundError = require('../utils/NotfoundError');
 const ConflictError = require('../utils/ConflictError');
 
-const { JWT_SECRET = 'secret' } = process.env;
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.getUser = async (req, res, next) => {
   const { userId } = req.params;
@@ -54,12 +54,12 @@ module.exports.createUser = async (req, res, next) => {
 };
 
 module.exports.updateUser = async (req, res, next) => {
-  const { name } = req.body;
+  const { name, email } = req.body;
   const userId = req.user._id;
   try {
     const user = await User.findByIdAndUpdate(
       userId,
-      { name },
+      { name, email },
       { new: true, runValidators: true },
     );
     if (!user) {
@@ -72,6 +72,8 @@ module.exports.updateUser = async (req, res, next) => {
   } catch (err) {
     if (err.name === 'ValidationError') {
       next(new BadreqestError('Переданы некорректные данные'));
+    } else if (err.code === 11000) {
+      next(new ConflictError('Пользователь с такой электронной почтой уже зарегистрирован'));
     } else {
       next(new ServerError('Произошла ошибка на сервере'));
     }
@@ -87,7 +89,7 @@ module.exports.login = async (req, res, next) => {
     } else {
       const isUserValid = await bcrypt.compare(password, user.password);
       if (isUserValid) {
-        const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
+        const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', { expiresIn: '7d' });
         res.cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true, sameSite: true });
         res.send({
           _id: user._id, name: user.name, about: user.about, avatar: user.avatar, email: user.email,

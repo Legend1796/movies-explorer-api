@@ -5,10 +5,7 @@
       "error",
       {
         "allow": [
-          "_id",
-          "eslint-disable",
-          "eslint-disable-line",
-          "eslint-disable-next-line"
+          "_id"
         ]
       }
     ]
