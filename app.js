@@ -4,7 +4,8 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 
-const { PORT = 3000 } = process.env;
+const { NODE_ENV, PORT, MONGO_URL } = process.env;
+
 const app = express();
 const { errorHandler } = require('./middlewares/errorHandler');
 const router = require('./routes/index');
@@ -14,13 +15,13 @@ const { limiter } = require('./middlewares/rateLimiter');
 
 async function main() {
   try {
-    await mongoose.connect('mongodb://localhost:27017/moviesdb', {
+    await mongoose.connect(NODE_ENV === 'production' ? MONGO_URL : 'mongodb://localhost:27017/moviesdb', {
       useNewUrlParser: true,
       useUnifiedTopology: false,
     });
 
-    await app.listen(PORT, () => {
-      console.log(`App listening on port ${PORT}`);
+    await app.listen(NODE_ENV === 'production' ? PORT : 3000, () => {
+      console.log(`App listening on port ${NODE_ENV === 'production' ? PORT : 3000}`);
     });
   } catch (err) {
     console.log(err);
