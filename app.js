@@ -10,6 +10,7 @@ const { errorHandler } = require('./middlewares/errorHandler');
 const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { allowedCors } = require('./middlewares/cors');
+const { limiter } = require('./middlewares/rateLimiter');
 
 async function main() {
   try {
@@ -32,6 +33,7 @@ app.use(allowedCors);
 app.use(express.json());
 app.use(cookieParser());
 app.use(requestLogger);
+app.use(limiter);
 app.use(router);
 app.use(errors());
 app.use(errorLogger);
