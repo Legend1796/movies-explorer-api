@@ -3,6 +3,7 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
+const helmet = require('helmet');
 
 const { NODE_ENV, PORT, MONGO_URL } = process.env;
 
@@ -30,6 +31,7 @@ async function main() {
 
 main();
 
+app.use(helmet());
 app.use(allowedCors);
 app.use(express.json());
 app.use(cookieParser());
