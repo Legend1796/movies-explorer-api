@@ -96,7 +96,9 @@ module.exports.login = async (req, res, next) => {
           sameSite: 'none',
           secure: true,
         });
-        res.send({ token });
+        res.send({
+          _id: user._id, name: user.name, email: user.email,
+        });
       } else {
         next(new UnautorizedError('Неправильные почта или пароль'));
       }
