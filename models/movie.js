@@ -25,10 +25,10 @@ const movieSchema = new mongoose.Schema({
   image: {
     type: String,
     required: true,
-    validate: {
-      validator: validator.isURL,
-      message: 'Неправильный формат ссылки',
-    },
+    // validate: {
+    //   validator: validator.isURL,
+    //   message: 'Неправильный формат ссылки',
+    // },
   },
   trailerLink: {
     type: String,
@@ -41,10 +41,10 @@ const movieSchema = new mongoose.Schema({
   thumbnail: {
     type: String,
     required: true,
-    validate: {
-      validator: validator.isURL,
-      message: 'Неправильный формат ссылки',
-    },
+    // validate: {
+    //   validator: validator.isURL,
+    //   message: 'Неправильный формат ссылки',
+    // },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
