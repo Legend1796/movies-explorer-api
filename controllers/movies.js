@@ -62,7 +62,7 @@ module.exports.deleteMovies = async (req, res, next) => {
     } else if (movie.owner.toString() !== req.user._id) {
       next(new ForbiddenError('У вас нет прав на удаление этой карточки'));
     } else {
-      await Movie.deleteOne(movie);
+      await Movie.deleteOne({ _id: req.params.movieId });
       res.send(movie);
     }
   } catch (err) {
